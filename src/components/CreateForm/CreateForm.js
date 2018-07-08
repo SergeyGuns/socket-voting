@@ -1,22 +1,13 @@
 import React from 'react'
+import { TextField, MenuItem, Grid, Button } from "@material-ui/core";
 
-const QUESTION_TYPES = [
-  'checkbox',
-  'radio',
-  'range'
-]
 
 export default class CreateForm extends React.Component {
   constructor() {
     super()
-    this.state = {
-      questionType: QUESTION_TYPES[1],
-      questionText: '',
-      questionAnswers: [
-        '',
-      ]
-    }
+    this.state = this.props.question
   }
+
   handleSetQuestionType = ev => (
     this.setState({ questionType: ev.target.value })
   )
@@ -26,37 +17,91 @@ export default class CreateForm extends React.Component {
   handleAddAnswer = () => {
     let newAnswers = this.state.questionAnswers
     newAnswers.push('')
-    this.setState({ questionAnswers: newAnswers })
+    this.setState({
+      handleSetAnswers: newAnswers
+    })
   }
 
-  handleSerAnswerText = ev => {
+  handleSetAnswerText = ev => {
+    console.log(ev.target)
     this.setState({
-      questionAnswers : this.state.questionAnswers.map((answer,index)=>{
-        if(index === +ev.target.dataset.index) {
+      questionAnswers: this.state.questionAnswers.map((answer, index) => {
+        if ('q-a-' + index === ev.target.id) {
           return ev.target.value
         }
         return answer
       })
     })
   }
+
+  formToJSON = ()=> {
+    console.dir({
+      ...this.state,
+      date: Date.now()})
+  }
+
+  handleSaveForm = () => {
+    const json = {
+      ...this.state,
+      date: Date.now()
+    }
+    console.log(json)
+  }
+
+
+
   render() {
-    const { questionType, questionAnswers } = this.state
+    const { questionType, questionAnswers, questionText } = this.state
     return (
-      <div className="create-form">
-        <select value={questionType} onChange={this.handleSetQuestionType} name="questionType" id="">
-          {
-            QUESTION_TYPES.map(type => <option key={type} value={type}>{type}</option>)
-          }
-        </select>
-        {
-          questionAnswers.map((answer, index) => (
-            <div key={index} className="create-form__answer">
-              {index}. <input onChange={this.handleSerAnswerText} type="text" data-index={index} value={answer} className="create-form__answer-input" />
-            </div>
-          ))
-        }
-        <button onClick={this.handleAddAnswer}>add</button>
-      </div>
+      <Grid className='create-form' container spacing={24}>
+        <Grid item xs={12}>
+          <TextField
+            id='questionText'
+            label='Текст вопроса'
+            value={questionText}
+            onChange={this.handleSetQuestionText}
+            margin='normal'
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            id='select-currency'
+            select
+            label='Тип вопроса'
+            value={questionType}
+            onChange={this.handleSetQuestionType}
+            helperText='Please select your currency'
+            margin='normal'
+          >
+            {QUESTION_TYPES.map(option => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        {questionAnswers.map((text, index) => (
+          <Grid key={index} item xs={12}>
+            <TextField
+              id={`q-a-${index}`}
+              key={index}
+              data-index={index}
+              label={`Текст ответа ${index + 1}.`}
+              value={text}
+              onChange={this.handleSetAnswerText}
+              margin='normal'
+            />
+          </Grid>
+        ))}
+        <Grid item xs={12}>
+          <Button onClick={this.handleAddAnswer} variant="contained" color="primary">
+            Добавить ответ
+          </Button>
+          <Button onClick={this.formToJSON} variant="contained" color="secondary" >
+            Сохранить
+          </Button>
+        </Grid>
+      </Grid>
     )
   }
 }
