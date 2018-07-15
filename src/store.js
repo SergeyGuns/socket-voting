@@ -3,7 +3,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import { QUESTION_TYPES } from './constants'
-// import counter from './counter'
+import reduser from './redusers'
 
 const rootReducer = combineReducers({
   // counter
