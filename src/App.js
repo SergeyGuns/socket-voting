@@ -3,36 +3,22 @@ import './App.css';
 import CreateForm from "./components/CreateForm";
 import QuestionList from "./components/QuestionList";
 
-const QUESTION_TYPES = [
-  'checkbox',
-  'radio',
-  'range'
-]
 
 class App extends Component {
-  state = {
-    questionList: [
-      {
-        questionType: QUESTION_TYPES[1],
-        questionText: 'q1',
-        questionAnswers: [
-          '',
-        ]
-      },
-      {
-        questionType: QUESTION_TYPES[1],
-        questionText: 'q2',
-        questionAnswers: [
-          '',
-        ]
-      }
-    ]
+
+  handleSetCurrQuestion = (ev) => {
+    this.setState({ currQuestionIndex: ev.currentTarget.dataset.index})
   }
+  
   render() {
+    const { questionList, currQuestionIndex } = this.state
     return (
       <div className="App">
-        <QuestionList questionList={this.state.questionList} />
-        <CreateForm/>
+        <QuestionList 
+          handleSetCurrQuestion={this.handleSetCurrQuestion}
+          currQuestionIndex={currQuestionIndex} 
+          questionList={questionList} />
+        <CreateForm  {...questionList[currQuestionIndex]} />
       </div>
     );
   }

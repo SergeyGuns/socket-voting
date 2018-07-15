@@ -1,51 +1,13 @@
 import React from 'react'
 import { TextField, MenuItem, Grid, Button } from "@material-ui/core";
+import { QUESTION_TYPES } from '../../constants'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-
-export default class CreateForm extends React.Component {
-  constructor() {
+ class CreateForm extends React.Component {
+  constructor(props) {
     super()
-    this.state = this.props.question
-  }
-
-  handleSetQuestionType = ev => (
-    this.setState({ questionType: ev.target.value })
-  )
-  handleSetQuestionText = ev => (
-    this.setState({ questionText: ev.target.value })
-  )
-  handleAddAnswer = () => {
-    let newAnswers = this.state.questionAnswers
-    newAnswers.push('')
-    this.setState({
-      handleSetAnswers: newAnswers
-    })
-  }
-
-  handleSetAnswerText = ev => {
-    console.log(ev.target)
-    this.setState({
-      questionAnswers: this.state.questionAnswers.map((answer, index) => {
-        if ('q-a-' + index === ev.target.id) {
-          return ev.target.value
-        }
-        return answer
-      })
-    })
-  }
-
-  formToJSON = ()=> {
-    console.dir({
-      ...this.state,
-      date: Date.now()})
-  }
-
-  handleSaveForm = () => {
-    const json = {
-      ...this.state,
-      date: Date.now()
-    }
-    console.log(json)
+    this.state = {...props}
   }
 
 
@@ -105,3 +67,15 @@ export default class CreateForm extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (props) => ({
+
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+}, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateForm)
